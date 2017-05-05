@@ -36,21 +36,21 @@ open class PVPSSHManager: NSObject {
     
     
     //initialization
-    init(host: String, userName: String, password: String? = nil) {
+    public init(host: String, userName: String, password: String? = nil) {
         self.host = host
         self.userName = userName
         self.password = password
     }
     
     //delegate
-    var delegate: PVPSSHManagerDelegate?
+    public var delegate: PVPSSHManagerDelegate?
     
     //computed vars
-    var isConnected: Bool {
+    public var isConnected: Bool {
         return session?.isConnected ?? false
     }
     
-    var isAuthorized: Bool {
+    public var isAuthorized: Bool {
         return session?.isAuthorized ?? false
     }
 }
@@ -58,7 +58,7 @@ open class PVPSSHManager: NSObject {
 //MARK: - Commands methods
 extension PVPSSHManager{
     //send command
-    internal func sendCommand(command: String, completionHandler: @escaping (_ error: PVPError?) -> Void) {
+    public func sendCommand(command: String, completionHandler: @escaping (_ error: PVPError?) -> Void) {
         
         if let channel = channel {
             sshQueue.async {
@@ -84,7 +84,7 @@ extension PVPSSHManager{
     }
     
     //execute command
-    internal func executeCommand(command: String, completionHandler: @escaping (_ error: PVPError?, _ string: String?) -> Void) {
+    public  func executeCommand(command: String, completionHandler: @escaping (_ error: PVPError?, _ string: String?) -> Void) {
         
         if let channel = channel {
             sshQueue.async {
@@ -117,7 +117,7 @@ extension PVPSSHManager{
 extension PVPSSHManager {
     
     //initiating session. Set startShell true for use sending commands, false for use executing commands
-    func initiateSessionAndAuthorize(startShell: Bool = false, completionHandler: @escaping (_ error: PVPError?) -> Void) {
+    public func initiateSessionAndAuthorize(startShell: Bool = false, completionHandler: @escaping (_ error: PVPError?) -> Void) {
         
         guard let pass = password else{
             
@@ -170,7 +170,7 @@ extension PVPSSHManager {
         }
     }
     
-    func disconnect() {
+    public func disconnect() {
         if let session = session {
             sshQueue.async {
                 session.disconnect()
@@ -178,7 +178,7 @@ extension PVPSSHManager {
         }
     }
     
-    func connect() {
+    public func connect() {
         if let session = session {
             sshQueue.async {
                 session.connect()
@@ -186,7 +186,7 @@ extension PVPSSHManager {
         }
     }
     
-    func authenticate() {
+    public func authenticate() {
         if let session = session, let pass = password {
             sshQueue.async {
                 session.authenticate(byPassword: pass)
@@ -194,7 +194,7 @@ extension PVPSSHManager {
         }
     }
     
-    func startShell(completionHandler: @escaping (_ error: PVPError?) -> Void) {
+    public func startShell(completionHandler: @escaping (_ error: PVPError?) -> Void) {
         if let channel = channel {
             channel.delegate = self
             channel.requestPty = true
@@ -219,7 +219,7 @@ extension PVPSSHManager {
         }
     }
     
-    func closeShell() {
+    public func closeShell() {
         if let channel = channel {
             
             sshQueue.async {
