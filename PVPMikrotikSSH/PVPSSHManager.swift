@@ -9,7 +9,7 @@
 import Foundation
 import NMSSH
 
-@objc protocol PVPSSHManagerDelegate {
+@objc public protocol PVPSSHManagerDelegate {
     @objc optional func sessionDidDisconnectWithError(error: Error)
     @objc optional func channelDidReadData(message: String)
     @objc optional func channelDidReadError(error: String)
@@ -17,7 +17,7 @@ import NMSSH
     @objc optional func additionalErrorReceived(error: Error)
 }
 
-class PVPSSHManager: NSObject {
+open class PVPSSHManager: NSObject {
     
     //fileprivate log-in variables
     fileprivate let host: String
@@ -232,7 +232,7 @@ extension PVPSSHManager {
 //MARK: - NMSSH Session Delegate
 extension PVPSSHManager: NMSSHSessionDelegate {
     
-    func session(_ session: NMSSHSession!, didDisconnectWithError error: Error!) {
+    public func session(_ session: NMSSHSession!, didDisconnectWithError error: Error!) {
         //use main queue to use this code for an interface
         mainQueue.async {
             self.delegate?.sessionDidDisconnectWithError?(error: error)
@@ -243,21 +243,21 @@ extension PVPSSHManager: NMSSHSessionDelegate {
 //MARK: - NMSSH Channel Delegate
 extension PVPSSHManager: NMSSHChannelDelegate {
     
-    func channel(_ channel: NMSSHChannel!, didReadError error: String!) {
+    public func channel(_ channel: NMSSHChannel!, didReadError error: String!) {
         //use main queue to use this code for an interface
         mainQueue.async {
             self.delegate?.channelDidReadError?(error: error)
         }
     }
     
-    func channel(_ channel: NMSSHChannel!, didReadData message: String!) {
+    public func channel(_ channel: NMSSHChannel!, didReadData message: String!) {
         //use main queue to use this code for an interface
         mainQueue.async {
             self.delegate?.channelDidReadData?(message: message)
         }
     }
     
-    func channelShellDidClose(_ channel: NMSSHChannel!) {
+    public func channelShellDidClose(_ channel: NMSSHChannel!) {
         //use main queue to use this code for an interface
         mainQueue.async {
             self.delegate?.channelShellDidClose?()

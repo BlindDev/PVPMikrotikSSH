@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum PVPError {
+public enum PVPError {
     
     case errorWritingCommand(command: String, error: Error)
     case errorExecutingCommand(command: String, error: Error)
