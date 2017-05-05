@@ -1,65 +1,52 @@
-# Xcode
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
-
-## Build generated
-build/
-DerivedData/
-
-## Various settings
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata/
-
-## Other
-*.moved-aside
-*.xcuserstate
-
-## Obj-C/Swift specific
-*.hmap
-*.ipa
-*.dSYM.zip
-*.dSYM
-
-## Playgrounds
-timeline.xctimeline
-playground.xcworkspace
-
-# Swift Package Manager
-#
-# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
-# Packages/
-.build/
-
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-
-# Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
-Carthage/Build
-
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
-
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
+Pods/NMSSH/NMSSH/Config/socket_helper.h
+Pods/NMSSH/NMSSH/Config/socket_helper.m
+Pods/NMSSH/NMSSH/Protocols/NMSSHChannelDelegate.h
+Pods/NMSSH/NMSSH/Protocols/NMSSHSessionDelegate.h
+Pods/Pods.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/NMSSH.xcscheme
+Pods/Pods.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/Pods-PVPMikrotikSSH.xcscheme
+Pods/Pods.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/xcschememanagement.plist
+Pods/Target Support Files/NMSSH/Info.plist
+Pods/Target Support Files/NMSSH/NMSSH-dummy.m
+Pods/Target Support Files/NMSSH/NMSSH-prefix.pch
+Pods/Target Support Files/NMSSH/NMSSH-umbrella.h
+Pods/Target Support Files/NMSSH/NMSSH.modulemap
+Pods/Target Support Files/NMSSH/NMSSH.xcconfig
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Info.plist
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-acknowledgements.markdown
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-acknowledgements.plist
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-dummy.m
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-frameworks.sh
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-resources.sh
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH-umbrella.h
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH.debug.xcconfig
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH.modulemap
+Pods/Target Support Files/Pods-PVPMikrotikSSH/Pods-PVPMikrotikSSH.release.xcconfig
+Podfile
+Pods/Manifest.lock
+Pods/NMSSH/LICENSE
+Pods/NMSSH/README.md
+Pods/NMSSH/NMSSH/NMSFTP.h
+Pods/NMSSH/NMSSH/NMSFTP.m
+Pods/NMSSH/NMSSH/NMSFTPFile.h
+Pods/NMSSH/NMSSH/NMSFTPFile.m
+Pods/NMSSH/NMSSH/NMSSH.h
+Pods/NMSSH/NMSSH/NMSSHChannel.h
+Pods/NMSSH/NMSSH/NMSSHChannel.m
+Pods/NMSSH/NMSSH/NMSSHConfig.h
+Pods/NMSSH/NMSSH/NMSSHConfig.m
+Pods/NMSSH/NMSSH/NMSSHHostConfig.h
+Pods/NMSSH/NMSSH/NMSSHHostConfig.m
+Pods/NMSSH/NMSSH/NMSSHSession.h
+Pods/NMSSH/NMSSH/NMSSHSession.m
+Pods/NMSSH/NMSSH-iOS/NMSSH.h
+Pods/NMSSH/NMSSH-iOS/Libraries/include/libssh2/libssh2.h
+Pods/NMSSH/NMSSH-iOS/Libraries/include/libssh2/libssh2_publickey.h
+Pods/NMSSH/NMSSH-iOS/Libraries/include/libssh2/libssh2_sftp.h
+Pods/NMSSH/NMSSH-iOS/Libraries/lib/libcrypto.a
+Pods/NMSSH/NMSSH-iOS/Libraries/lib/libssh2.a
+Pods/NMSSH/NMSSH-iOS/Libraries/lib/libssl.a
+Pods/NMSSH/NMSSH/Config/NMSSH+Protected.h
+Pods/NMSSH/NMSSH/Config/NMSSHLogger.h
+Pods/NMSSH/NMSSH/Config/NMSSHLogger.m
+PVPMikrotikSSH.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/PVPMikrotikSSH.xcscheme
+PVPMikrotikSSH.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/xcschememanagement.plist
