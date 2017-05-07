@@ -22,13 +22,16 @@ open class PVPSSHManager: NSObject {
     //fileprivate log-in variables
     fileprivate let host: String
     fileprivate let userName: String
-    fileprivate var password: String?
     
     //NMSSH vars
     fileprivate var session: NMSSHSession?
     fileprivate var channel: NMSSHChannel? {
         return session?.channel
     }
+    
+    //public stored vars
+    public var password: String?
+    public var delegate: PVPSSHManagerDelegate?
     
     //Queues
     fileprivate let sshQueue = DispatchQueue(label: "SSH Queue")
@@ -42,10 +45,8 @@ open class PVPSSHManager: NSObject {
         self.password = password
     }
     
-    //delegate
-    public var delegate: PVPSSHManagerDelegate?
     
-    //computed vars
+    //public computed vars
     public var isConnected: Bool {
         return session?.isConnected ?? false
     }
@@ -111,13 +112,76 @@ extension PVPSSHManager{
             }
         }
     }
+    
+    //write bunch of commands
+    //If session channel is exist, then the handler will return only errors with sending commands
+    //an empty results array means that there was not any error writnig commands
+    public func writeBunch(commands: [String], completionHandler: @escaping (_ error: PVPError?, _ results: [String]?) -> Void) {
+        
+        if let channel = channel {
+            sshQueue.async {
+                
+                var answers: [String] = []
+                
+                for command in commands {
+                    
+                    //trying send command
+                    do {
+                        try channel.write(command)
+                        
+                    }catch let error {
+                        
+                        answers.append("Error: \(error.localizedDescription)")
+                    }
+                }
+                
+                self.mainQueue.async {
+                    completionHandler(nil, answers)
+                }
+            }
+        }else{
+            completionHandler(PVPError.noSessionChannel, nil)
+        }
+    }
+    
+    //execute bunch of commands
+    //If session channel is exist, then the handler will send an array of answers.
+    //An empty string in the results array means that there is no error with this command
+    public func executeBunch(commands: [String], completionHandler: @escaping (_ error: PVPError?, _ results: [String]?) -> Void) {
+        
+        if let channel = channel {
+            sshQueue.async {
+                
+                var answers: [String] = []
+                
+                for command in commands {
+                    
+                    //trying send command
+                    do {
+                        let response = try channel.execute(command)
+                        
+                        answers.append(response)
+                    }catch let error {
+                        
+                        answers.append("Error: \(error.localizedDescription)")
+                    }
+                }
+                
+                self.mainQueue.async {
+                    completionHandler(nil, answers)
+                }
+            }
+        }else{
+            completionHandler(PVPError.noSessionChannel, nil)
+        }
+    }
 }
 
 //MARK: - Session public methods
 extension PVPSSHManager {
     
-    //initiating session. Set startShell true for use sending commands, false for use executing commands
-    public func initiateSessionAndAuthorize(startShell: Bool = false, completionHandler: @escaping (_ error: PVPError?) -> Void) {
+    //connecting session and authorizing
+    public func connectSessionAndAuthorize(completionHandler: @escaping (_ error: PVPError?) -> Void) {
         
         guard let pass = password else{
             
@@ -156,18 +220,24 @@ extension PVPSSHManager {
                 return
             }
             
-            //start shell if needed
-            if startShell {
-                self.startShell(completionHandler: completionHandler)
-            }else{
-                //small hold before complete
-                let deadLine = DispatchTime.now() + 0.5
-                
-                self.mainQueue.asyncAfter(deadline: deadLine) {
-                    completionHandler(nil)
-                }
+            
+            //all is ok, go back to main queue
+            self.mainQueue.async {
+                completionHandler(nil)
             }
         }
+    }
+    
+    //initiating session with existing username and host
+    public func initiateSession() {
+        //if we already have a session, disconnect then
+        if isConnected {
+            disconnect()
+            session = nil
+        }
+        
+        session = NMSSHSession(host: self.host, andUsername: self.userName)
+        session?.delegate = self
     }
     
     public func disconnect() {
@@ -175,6 +245,8 @@ extension PVPSSHManager {
             sshQueue.async {
                 session.disconnect()
             }
+        }else{
+            NMSSHLogger.shared().logError("Session is nil")
         }
     }
     
@@ -183,6 +255,8 @@ extension PVPSSHManager {
             sshQueue.async {
                 session.connect()
             }
+        }else{
+            NMSSHLogger.shared().logError("Session is nil")
         }
     }
     
@@ -191,6 +265,8 @@ extension PVPSSHManager {
             sshQueue.async {
                 session.authenticate(byPassword: pass)
             }
+        }else{
+            NMSSHLogger.shared().logError("Session is nil")
         }
     }
     
@@ -216,6 +292,9 @@ extension PVPSSHManager {
                 }
                 
             }
+        }else{
+            NMSSHLogger.shared().logError("Channel is nil")
+            completionHandler(PVPError.noSessionChannel)
         }
     }
     
@@ -225,6 +304,8 @@ extension PVPSSHManager {
             sshQueue.async {
                 channel.closeShell()
             }
+        }else{
+            NMSSHLogger.shared().logError("Channel is nil")
         }
     }
 }
