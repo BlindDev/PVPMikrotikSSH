@@ -118,28 +118,53 @@ extension PVPSSHManager{
     //an empty results array means that there was not any error writnig commands
     public func writeBunch(commands: [String], completionHandler: @escaping (_ error: PVPError?, _ results: [String]?) -> Void) {
         
+        
+        //writing bunch of commands. Each command will have one second delay
+        //checking channel
         if let channel = channel {
-            sshQueue.async {
+            //entering ssh queue
+            sshQueue.async { [weak self] in
                 
                 var answers: [String] = []
+                //creating dispatch group
+                let dispatchGroup = DispatchGroup()
                 
+                //executing command one-by-one
                 for command in commands {
                     
-                    //trying send command
-                    do {
-                        try channel.write(command)
+                    //entering dispatch group
+                    dispatchGroup.enter()
+                    
+                    let deadLine = DispatchTime.now() + 1.0
+                    
+                    //sending async command with delay
+                    self?.sshQueue.asyncAfter(deadline: deadLine, execute: {
                         
-                    }catch let error {
+                        //leave dispatch group in any case
                         
-                        answers.append("Error: \(error.localizedDescription)")
-                    }
+                        //trying send command
+                        do {
+                            try channel.write(command)
+                            
+                            dispatchGroup.leave()
+                            
+                        }catch let error {
+                            
+                            answers.append("Error: \(error.localizedDescription)")
+                            
+                            dispatchGroup.leave()
+                        }
+                    })
+                    
                 }
                 
-                self.mainQueue.async {
+                //making notification in the main queue when all commands will be sent
+                dispatchGroup.notify(queue: self?.mainQueue ?? DispatchQueue.main, execute: {
                     completionHandler(nil, answers)
-                }
+                })
             }
         }else{
+            //complete when there is no channel
             completionHandler(PVPError.noSessionChannel, nil)
         }
     }
@@ -149,31 +174,53 @@ extension PVPSSHManager{
     //An empty string in the results array means that there is no error with this command
     public func executeBunch(commands: [String], completionHandler: @escaping (_ error: PVPError?, _ results: [String]?) -> Void) {
         
+        //executing bunch of commands. Each command will have one second delay
+        //checking channel
         if let channel = channel {
-            sshQueue.async {
+            //entering ssh queue
+            sshQueue.async { [weak self] in
                 
                 var answers: [String] = []
+                //creating dispatch group
+                let dispatchGroup = DispatchGroup()
                 
+                //executing command one-by-one
                 for command in commands {
                     
-                    //trying send command
-                    do {
-                        let response = try channel.execute(command)
+                    //entering dispatch group
+                    dispatchGroup.enter()
+                    
+                    let deadLine = DispatchTime.now() + 1.0
+                    
+                    //sending async command with delay
+                    self?.sshQueue.asyncAfter(deadline: deadLine, execute: {
+                        //trying send command
                         
-                        answers.append(response)
-                    }catch let error {
+                        //leave dispatch group in any case
                         
-                        answers.append("Error: \(error.localizedDescription)")
-                    }
+                        do {
+                            let response = try channel.execute(command)
+                            
+                            answers.append(response)
+                            dispatchGroup.leave()
+                        }catch let error {
+                            answers.append("Error: \(error.localizedDescription)")
+                            dispatchGroup.leave()
+                        }
+                    })
+                    
                 }
                 
-                self.mainQueue.async {
+                //making notification in the main queue when all commands will be sent
+                dispatchGroup.notify(queue: self?.mainQueue ?? DispatchQueue.main, execute: {
                     completionHandler(nil, answers)
-                }
+                })
             }
         }else{
+            //complete when there is no channel
             completionHandler(PVPError.noSessionChannel, nil)
         }
+
     }
 }
 
