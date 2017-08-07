@@ -220,7 +220,7 @@ extension PVPSSHManager{
             //complete when there is no channel
             completionHandler(PVPError.noSessionChannel, nil)
         }
-
+        
     }
 }
 
@@ -230,11 +230,12 @@ extension PVPSSHManager {
     //connecting session and authorizing
     public func connectSessionAndAuthorize(completionHandler: @escaping (_ error: PVPError?) -> Void) {
         
-        guard let pass = password else{
+        guard password != nil else {
             
             completionHandler(PVPError.noPassword)
             return
         }
+        
         //if we already have a session, disconnect then
         if isConnected {
             disconnect()
@@ -257,7 +258,7 @@ extension PVPSSHManager {
             }
             
             //authenticating
-            let authorized = self.session?.authenticate(byPassword: pass)
+            let authorized = self.checkAuthentication()
             
             //check if session is not authenticated
             if authorized == false {
@@ -267,12 +268,48 @@ extension PVPSSHManager {
                 return
             }
             
-            
             //all is ok, go back to main queue
             self.mainQueue.async {
                 completionHandler(nil)
             }
+            
         }
+    }
+    
+    public func checkAuthentication() -> Bool {
+        
+        if isAuthorized {
+            return true
+        }
+        
+        guard let pass = password else {
+            return false
+        }
+        
+        var authorized: Bool
+        
+        //check that password cold be not sent in the router
+        if pass.isEmpty {
+            //execute simple command to check the result of the session
+            do {
+                
+                //this line will need to open the session, but it will always return false for an empty pass
+                _ = self.session?.authenticate(byPassword: "")
+                
+                let response = try self.channel?.execute("/put check")
+                
+                authorized = response?.contains("check") ?? false
+                
+            }catch {
+                authorized = false
+            }
+            
+            
+        }else{
+            authorized = self.session?.authenticate(byPassword: pass) ?? false
+        }
+        
+        return authorized
     }
     
     //initiating session with existing username and host

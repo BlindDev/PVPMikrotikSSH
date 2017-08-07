@@ -17,4 +17,23 @@ public enum PVPError {
     case notAuthorized
     case noSessionChannel
     case shellNotStarted(error: Error)
+    
+    public var info: String {
+        switch self {
+        case .errorWritingCommand(let command, let error):
+            return "Error writing command \(command)\n\(error.localizedDescription)"
+        case .errorExecutingCommand(let command, let error):
+            return "Error executing command \(command)\n\(error.localizedDescription)"
+        case .noPassword:
+            return "Error checking password"
+        case .notConnected:
+            return "Error establishing connection"
+        case .notAuthorized:
+            return "Error authenticating user"
+        case .noSessionChannel:
+            return "Error initiating channel"
+        case .shellNotStarted(let error):
+            return "Error starting shell\n\(error.localizedDescription)"
+        }
+    }
 }
