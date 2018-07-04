@@ -50,3 +50,6 @@ Pods/NMSSH/NMSSH/Config/NMSSHLogger.h
 Pods/NMSSH/NMSSH/Config/NMSSHLogger.m
 PVPMikrotikSSH.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/PVPMikrotikSSH.xcscheme
 PVPMikrotikSSH.xcodeproj/xcuserdata/pavelpopov.xcuserdatad/xcschemes/xcschememanagement.plist
+Pods
+PVPMikrotikSSH.xcodeproj
+PVPMikrotikSSH.xcworkspace
