@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "PVPMikrotikSSH"
-  s.version      = "1.0.4"
+  s.version      = "1.0.6"
   s.summary      = "Simple SSH manager that uses NMSSH library"
 
   # This description is used to generate tags and improve search results.
