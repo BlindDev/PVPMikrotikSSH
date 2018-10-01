@@ -48,7 +48,7 @@ class PVPSSHSecureObject: NSObject {
     }
     
     //Queues
-    let sshQueue = DispatchQueue(label: "SSH Queue")
+    let sshQueue = DispatchQueue(label: "SSH Queue", qos: .default)
     let mainQueue = DispatchQueue.main
 }
 //MARK: - Commands methods
